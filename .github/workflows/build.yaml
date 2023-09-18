@@ -14,13 +14,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out code
-        uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Set up Go 1.x
-        uses: actions/setup-go@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          go-version: ^1.15
+          node-version: 16
+
+      - name: Set up Go 1.19
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19
         id: go
 
       - name: Install dependencies
@@ -35,9 +40,4 @@ jobs:
 
       - name: Vet
         run: go vet ./...
-
-      - name: Lint
-        run: |
-          go get -u golang.org/x/lint/golint
-          golint ./...
 
