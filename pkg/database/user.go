@@ -18,6 +18,8 @@ type User struct {
 	Email     string `gorm:"unique;not null"`
 	Phone     uint   `gorm:"unique;not null"`
 	IsActive  bool   `gorm:"not null"`
+	RoleID    uint
+	Role      Role `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;foreignKey:RoleID"`
 }
 
 func (d *Database) CreateUser(ctx context.Context, user users.User) error {
