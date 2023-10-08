@@ -1,13 +1,10 @@
 package database
 
 import (
-	"context"
 	"fmt"
-	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
-	"log"
 	"os"
 )
 
@@ -16,13 +13,8 @@ type Database struct {
 }
 
 func NewDatabase() (*Database, error) {
-	err := godotenv.Load()
-	if err != nil {
-		return nil, err
-	}
 
-	configurations := fmt.Sprintf("host=%v port=%v user=%v password=%v dbname=%v sslmode=%v", os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_USERNAME"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_NAME"), os.Getenv("SSL_MODE"))
-
+	configurations := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%s", os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_USERNAME"), os.Getenv("DB_TABLE"), os.Getenv("DB_PASSWORD"), os.Getenv("SSL_MODE"))
 	db, err := gorm.Open(postgres.New(postgres.Config{
 		DSN:                  configurations,
 		PreferSimpleProtocol: true,
@@ -44,21 +36,4 @@ func NewDatabase() (*Database, error) {
 	return &Database{
 		Client: db,
 	}, nil
-}
-
-// ReadyCheck checks if the database is ready
-func ReadyCheck(ctx context.Context) error {
-	newDBConnection, err := NewDatabase()
-
-	db, err := newDBConnection.Client.DB()
-
-	if err != nil {
-		log.Fatalf("Failed to connect to the database: %v", err)
-	}
-
-	if err := db.PingContext(ctx); err != nil {
-		log.Fatalf("Failed to ping the database: %v", err)
-		return err
-	}
-	return nil
 }
