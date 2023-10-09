@@ -1,9 +1,9 @@
 package main
 
 import (
-	"authenticationsystem/pkg/api/handler"
-	"authenticationsystem/pkg/database"
-	"authenticationsystem/pkg/users"
+	"Reusable-Auth-System/pkg/api/handler"
+	"Reusable-Auth-System/pkg/database"
+	"Reusable-Auth-System/pkg/users"
 	"fmt"
 	"log"
 )

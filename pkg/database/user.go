@@ -1,8 +1,11 @@
 package database
 
 import (
-	"authenticationsystem/pkg/users"
+	"Reusable-Auth-System/pkg/users"
 	"errors"
+	"fmt"
+	"github.com/sirupsen/logrus"
+	"go.uber.org/zap"
 	"golang.org/x/net/context"
 	"gorm.io/gorm"
 	"strings"
@@ -13,16 +16,20 @@ type User struct {
 	FirstName string `gorm:"not null"`
 	LastName  string `gorm:"not null"`
 	Username  string `gorm:"unique;not null"`
-	Age       uint   `gorm:"not null"`
+	Age       int64  `gorm:"not null"`
 	Password  string `gorm:"not null"`
 	Email     string `gorm:"unique;not null"`
-	Phone     uint   `gorm:"unique;not null"`
+	Phone     int64  `gorm:"unique;not null"`
 	IsActive  bool   `gorm:"not null"`
-	RoleID    uint
-	Role      Role `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;foreignKey:RoleID"`
+	RoleID    int64  `gorm:"not null"`
 }
 
 func (d *Database) CreateUser(ctx context.Context, user users.User) error {
+	d.Logger.WithFields(logrus.Fields{
+		"function": "CreateUser",
+		"user":     user,
+	}).Info("Creating a new user")
+
 	newUser := &User{
 		FirstName: user.FirstName,
 		LastName:  user.LastName,
@@ -32,20 +39,30 @@ func (d *Database) CreateUser(ctx context.Context, user users.User) error {
 		Email:     user.Email,
 		Phone:     user.Phone,
 		IsActive:  user.IsActive,
+		RoleID:    RoleUser,
 	}
 
 	if err := d.Client.WithContext(ctx).Create(newUser).Error; err != nil {
-		return err
+		d.Logger.WithFields(logrus.Fields{
+			"function": "CreateUser",
+			"error":    err,
+		}).Error("Error creating user")
+		return fmt.Errorf("error creating user: %w", err)
 	}
 
 	return nil
 }
 
-// GetUserByID returns the users with a specified id
-func (d *Database) GetUserByID(ctx context.Context, id uint) (users.User, error) {
-	user := User{}
-	if err := d.Client.WithContext(ctx).Where("id = ?", id).First(&user).Error; err != nil {
-		return users.User{}, err
+func (d *Database) GetUserByID(ctx context.Context, id int64) (users.User, error) {
+	var user User
+	err := d.Client.WithContext(ctx).Where("id = ?", id).First(&user).Error
+	if err != nil {
+		d.Logger.WithFields(logrus.Fields{
+			"function": "GetUserByID",
+			"ID":       id,
+			"error":    err,
+		}).Error("Error fetching user by ID")
+		return users.User{}, fmt.Errorf("error fetching user by ID %d: %w", id, err)
 	}
 	return users.User{
 		FirstName: user.FirstName,
@@ -62,7 +79,12 @@ func (d *Database) GetByEmail(ctx context.Context, email string) (*users.User, e
 	var user User
 	err := d.Client.WithContext(ctx).Where("email = ?", email).First(&user).Error
 	if err != nil {
-		return nil, err
+		d.Logger.WithFields(logrus.Fields{
+			"function": "GetByEmail",
+			"Email":    email,
+			"error":    err,
+		}).Error("Error fetching user by email")
+		return nil, fmt.Errorf("error fetching user by email %s: %w", email, err)
 	}
 	return &users.User{
 		FirstName: user.FirstName,
@@ -79,7 +101,12 @@ func (d *Database) GetByUsername(ctx context.Context, username string) (*users.U
 	var user User
 	err := d.Client.WithContext(ctx).Where("username = ?", username).First(&user).Error
 	if err != nil {
-		return nil, err
+		d.Logger.WithFields(logrus.Fields{
+			"function": "GetByUsername",
+			"Username": username,
+			"error":    err,
+		}).Error("Error fetching user by username")
+		return nil, fmt.Errorf("error fetching user by username %s: %w", username, err)
 	}
 	return &users.User{
 		FirstName: user.FirstName,
@@ -96,14 +123,26 @@ func (d *Database) GetUserByFullName(ctx context.Context, fullName string) (*use
 	var user User
 	names := strings.Fields(fullName)
 	if len(names) != 2 {
-		return nil, errors.New("invalid full name format")
+		err := errors.New("invalid full name format")
+		d.Logger.WithFields(logrus.Fields{
+			"function": "GetUserByFullName",
+			"FullName": fullName,
+			"error":    err,
+		}).Error("Invalid full name format")
+		return nil, err
 	}
 
 	firstName := names[0]
 	lastName := names[1]
 
-	if err := d.Client.WithContext(ctx).Where("first_name = ? AND last_name = ?", firstName, lastName).First(&user).Error; err != nil {
-		return nil, err
+	err := d.Client.WithContext(ctx).Where("first_name = ? AND last_name = ?", firstName, lastName).First(&user).Error
+	if err != nil {
+		d.Logger.WithFields(logrus.Fields{
+			"function": "GetUserByFullName",
+			"FullName": fullName,
+			"error":    err,
+		}).Error("Error fetching user by full name")
+		return nil, fmt.Errorf("error fetching user by full name %s: %w", fullName, err)
 	}
 
 	return &users.User{
@@ -117,43 +156,139 @@ func (d *Database) GetUserByFullName(ctx context.Context, fullName string) (*use
 	}, nil
 }
 
-func (d *Database) UpdateUserByID(ctx context.Context, user users.User) error {
-	var newUser User
+func (d *Database) UpdateUser(ctx context.Context, user User, id uint) error {
+	var existingUser User
+	if err := d.Client.WithContext(ctx).Where("id = ?", id).First(&existingUser).Error; err != nil {
+		d.Logger.Error("Error querying user", zap.Uint("ID", id), zap.Error(err))
+		return fmt.Errorf("error querying user: %w", err)
+	}
+	updateColumns := make(map[string]interface{})
 
-	// Check if users exists
-	if err := d.Client.WithContext(ctx).Where("id = ?", user.ID).First(&newUser).Error; err != nil {
-		return err
+	if user.Username != "" {
+		updateColumns["username"] = user.Username
+	}
+	if user.Email != "" {
+		updateColumns["email"] = user.Email
+	}
+	if user.Phone != 0 {
+		updateColumns["phone"] = user.Phone
+	}
+	if user.FirstName != "" {
+		updateColumns["first_name"] = user.FirstName
+	}
+	if user.LastName != "" {
+		updateColumns["last_name"] = user.LastName
+	}
+	if user.Age != 0 {
+		updateColumns["age"] = user.Age
 	}
 
-	newUser = User{
-		FirstName: user.FirstName,
-		LastName:  user.LastName,
-		Username:  user.Username,
-		Age:       user.Age,
-		Email:     user.Email,
-		Phone:     user.Phone,
-		IsActive:  user.IsActive,
+	if len(updateColumns) == 0 {
+		return nil // Nothing to update
 	}
 
-	// if the users exists and passwords match, update the database with the users's new details
-	if err := d.Client.WithContext(ctx).Save(&newUser).Error; err != nil {
-		return err
+	if err := d.Client.WithContext(ctx).Model(&existingUser).Omit("RoleID", "IsActive", "Password").Updates(updateColumns).Error; err != nil {
+		d.Logger.Error("Error updating user", zap.Uint("ID", id), zap.Error(err))
+		return fmt.Errorf("error updating user: %w", err)
 	}
+
 	return nil
 }
 
-// DeactivateUserByID sets the user's IsActive status to false based on the provided ID.
-func (d *Database) DeactivateUserByID(ctx context.Context, id uint) error {
-	user := User{}
+func (d *Database) DeactivateUserByID(ctx context.Context, id int64) error {
+	var user User
 	if err := d.Client.WithContext(ctx).Where("id = ?", id).First(&user).Error; err != nil {
-		// Return an error if the users is not found
-		return err
+		d.Logger.WithFields(logrus.Fields{
+			"function": "DeactivateUserByID",
+			"ID":       id,
+			"error":    err,
+		}).Error("Error fetching user by ID for deactivation")
+		return fmt.Errorf("error fetching user by ID %d for deactivation: %w", id, err)
 	}
-	// Set the user's IsActive status to false
 	user.IsActive = false
 	if err := d.Client.WithContext(ctx).Save(&user).Error; err != nil {
-		return err
+		d.Logger.WithFields(logrus.Fields{
+			"function": "DeactivateUserByID",
+			"ID":       id,
+			"error":    err,
+		}).Error("Error deactivating user")
+		return fmt.Errorf("error deactivating user: %w", err)
 	}
 
+	return nil
+}
+
+func (d *Database) ResetPassword(ctx context.Context, newUser users.User) error {
+	hashedPassword, err := HashPassword(newUser.Password)
+	if err != nil {
+		d.Logger.WithFields(logrus.Fields{
+			"function": "ResetPassword",
+			"error":    err,
+		}).Error("Error hashing password")
+		return fmt.Errorf("error hashing password: %w", err)
+	}
+
+	result := d.Client.WithContext(ctx).Model(&User{}).
+		Where("username = ? AND email = ? AND is_active = ?", newUser.Username, newUser.Email, newUser.IsActive).
+		Updates(map[string]interface{}{"password": hashedPassword})
+
+	if result.RowsAffected == 0 {
+		return errors.New("no matching active user found with the provided username and email")
+	}
+
+	if result.Error != nil {
+		d.Logger.WithFields(logrus.Fields{
+			"function": "ResetPassword",
+			"error":    result.Error,
+		}).Error("Error updating password")
+		return fmt.Errorf("error updating password: %w", result.Error)
+	}
+
+	return nil
+}
+func (d *Database) UpdateUserRoleID(ctx context.Context, id uint, newRoleID int64) error {
+	var existingUser User
+	if err := d.Client.WithContext(ctx).Where("id = ?", id).First(&existingUser).Error; err != nil {
+		d.Logger.WithFields(logrus.Fields{
+			"function": "UpdateUserRoleID",
+			"ID":       id,
+			"error":    err,
+		}).Error("Error querying user")
+		return fmt.Errorf("error querying user: %w", err)
+	}
+
+	existingUser.RoleID = newRoleID
+	if err := d.Client.WithContext(ctx).Model(&existingUser).Updates(User{RoleID: newRoleID}).Error; err != nil {
+		d.Logger.WithFields(logrus.Fields{
+			"function":  "UpdateUserRoleID",
+			"ID":        id,
+			"newRoleID": newRoleID,
+			"error":     err,
+		}).Error("Error updating user role ID")
+		return fmt.Errorf("error updating user role ID: %w", err)
+	}
+
+	return nil
+}
+
+func (d *Database) DeleteUserByID(ctx context.Context, id string) error {
+	result := d.Client.WithContext(ctx).Delete(&User{}, id)
+	if result.Error != nil {
+		d.Logger.WithFields(logrus.Fields{
+			"id":    id,
+			"error": result.Error,
+		}).Error("Error deleting user")
+		return result.Error
+	}
+	if result.RowsAffected == 0 {
+		err := fmt.Errorf("no user found with id %s", id)
+		d.Logger.WithFields(logrus.Fields{
+			"id": id,
+		}).Warn("No user found for deletion")
+		return err
+	}
+	d.Logger.WithFields(logrus.Fields{
+		"id": id,
+	}).Info("User deleted successfully")
 	return nil
 }

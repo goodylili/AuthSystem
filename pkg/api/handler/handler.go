@@ -1,8 +1,7 @@
 package handler
 
 import (
-	"authenticationsystem/pkg/database"
-	"authenticationsystem/pkg/users"
+	"Reusable-Auth-System/pkg/users"
 	"context"
 	"fmt"
 	"github.com/gin-contrib/cors"
@@ -52,21 +51,21 @@ func NewHandler(users users.Service) *Handler {
 
 }
 
-func (handler *Handler) mapRoutes() {
-	handler.Router.GET("/alive", AliveCheck)
-	handler.Router.GET("/ready", ReadyCheck)
+func (h *Handler) mapRoutes() {
+	h.Router.GET("/alive", AliveCheck)
+	h.Router.GET("/ready", h.Ping)
 
 	// Users Routes
-	v1 := handler.Router.Group("/api/v1")
+	v1 := h.Router.Group("/api/v1/users")
 	{
-		v1.POST("/user", CreateUser)
-		v1.GET("/users/:id", GetUserByID)
-		v1.GET("/users/email/:email", GetByEmail)
-		v1.GET("/users/username/:username", GetByUsername)
-		v1.GET("/users/:username", GetByUsername)
-		v1.GET("/users/fullname/:fullname", GetUserByFullName)
-		v1.PUT("/users/:id", UpdateUserByID)
-		v1.PUT("/users/:id", DeactivateUserByID)
+		v1.POST("/", h.CreateUser)
+		v1.GET("/:id", h.GetUserByID)
+		v1.GET("/email/:email", h.GetByEmail)
+		v1.GET("/username/:username", h.GetByUsername)
+		v1.GET("/:username", h.GetByUsername)
+		v1.GET("/full_name/:full_name", h.GetUserByFullName)
+		v1.PUT("/:id", h.UpdateUserByID)
+		v1.PUT("/:id", h.DeactivateUserByID)
 	}
 
 }
@@ -78,9 +77,9 @@ func AliveCheck(c *gin.Context) {
 }
 
 // Serve - gracefully serves our newly set up handler function
-func (handler *Handler) Serve() error {
+func (h *Handler) Serve() error {
 	go func() {
-		err := handler.Router.Run(fmt.Sprintf(":%v", 8080))
+		err := h.Router.Run(fmt.Sprintf(":%v", 8080))
 		if err != nil {
 			log.Println(err)
 
@@ -94,22 +93,11 @@ func (handler *Handler) Serve() error {
 	// CreateAccount a deadline to wait for
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
-	err := handler.Server.Shutdown(ctx)
+	err := h.Server.Shutdown(ctx)
 	if err != nil {
 		return err
 	}
 
 	log.Println("shutting down gracefully")
 	return nil
-}
-
-func ReadyCheck(c *gin.Context) {
-	err := database.ReadyCheck(c.Request.Context())
-
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"message": "Database is ready"})
 }
