@@ -21,6 +21,7 @@ The service is designed with security in mind, implementing measures to prevent 
 
 
 ## Features
+- [x] User Management
 - [ ] User Authentication
     - [ ] User Registration: Allows new users to create an account.
     - [ ] User Login: Allows existing users to log in.
