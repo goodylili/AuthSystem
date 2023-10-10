@@ -19,13 +19,13 @@ type Message struct {
 }
 
 type Email struct {
-	From    string
-	To      string
-	Subject string
-	Body    string
+	From      string
+	Recipient string
+	Subject   string
+	Body      string
 }
 
-func LoadEmail(header, username, introduction, content, url, action string) (bytes.Buffer, error) {
+func LoadEmail(message Message) (bytes.Buffer, error) {
 	// Load and parse the email template
 	tmpl, err := template.ParseFiles("../static/index.html")
 	if err != nil {
@@ -33,12 +33,12 @@ func LoadEmail(header, username, introduction, content, url, action string) (byt
 	}
 
 	data := Message{
-		Header:       header,
-		UsersName:    username,
-		Introduction: introduction,
-		Content:      content,
-		URL:          url,
-		Action:       action,
+		Header:       message.Header,
+		UsersName:    message.UsersName,
+		Introduction: message.Introduction,
+		Content:      message.Content,
+		URL:          message.URL,
+		Action:       message.Action,
 	}
 
 	var Body bytes.Buffer
@@ -51,7 +51,7 @@ func LoadEmail(header, username, introduction, content, url, action string) (byt
 	return Body, nil
 }
 
-func SendEmail(to, subject string, loadedMail bytes.Buffer) {
+func SendEmail(Recipient, subject string, loadedMail bytes.Buffer) error {
 	envVars := []string{"SMTP_HOST", "SMTP_PORT", "SMTP_USER", "SMTP_PASS"}
 	for _, envVar := range envVars {
 		if os.Getenv(envVar) == "" {
@@ -70,9 +70,12 @@ func SendEmail(to, subject string, loadedMail bytes.Buffer) {
 		"MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n" +
 		loadedMail.String())
 
-	err := smtp.SendMail(smtpHost+":"+smtpPort, smtpAuth, smtpUser, []string{to}, msg)
+	err := smtp.SendMail(smtpHost+":"+smtpPort, smtpAuth, smtpUser, []string{Recipient}, msg)
 	if err != nil {
-		_ = fmt.Errorf("smtp error while sending email: %s", err)
-		return
+		err = fmt.Errorf("smtp error while sending email: %s", err)
+		return err
 	}
+
+	return nil
+
 }
