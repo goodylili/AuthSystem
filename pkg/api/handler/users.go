@@ -1,6 +1,7 @@
 package handler
 
 import (
+	JWTtoken "Reusable-Auth-System/pkg/auth/jwt"
 	"Reusable-Auth-System/pkg/users"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -189,16 +190,24 @@ func (h *Handler) SignIn(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
 	err := h.Users.SignIn(c, user.Email, user.Password)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
+	token, err := JWTtoken.GenerateAccessJWT(user.Username)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Token generation failed"})
+		return
+	}
+
+	c.SetCookie("access_token", token, 3600, "/", "", false, true)
+
 	c.JSON(http.StatusOK, gin.H{"message": "User signed in successfully"})
 }
 
+// Ping is the handler for the ping route
 func (h *Handler) Ping(c *gin.Context) {
 	if err := h.Users.Ping(c); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

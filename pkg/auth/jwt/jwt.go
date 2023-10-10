@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func GenerateJWT(username string) (string, error) {
+func GenerateAccessJWT(username string) (string, error) {
 	secret := os.Getenv("JWT_SECRET")
 	token := jwt.New(jwt.SigningMethodEdDSA)
 	claims := token.Claims.(jwt.MapClaims)
