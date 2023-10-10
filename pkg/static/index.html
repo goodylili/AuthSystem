@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            background-color: white;
+            color: black;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin: auto;
+            padding: 20px;
+            max-width: 600px;
+            border: 1px solid #ddd;
+        }
+
+        .header,
+        .footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 2px solid black; /* Added border property here */
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px 0;
+            background-color: black;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h3> {{ .Header }}</h3>
+    </div>
+
+    <div class="content">
+        <p>Dear {{.UsersName}},</p>
+        <p> {{.Introduction}}.</p>
+        <p>{{.Content}}.</p>
+        <a href="{{.URL}}" class="btn">{{.Action}}</a>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2023 My App. All rights reserved.</p>
+    </div>
+</div>
+
+</body>
+</html>

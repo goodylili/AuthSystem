@@ -28,11 +28,12 @@ type Service interface {
 	GetByUsername(context.Context, string) (*User, error)
 	GetUserByFullName(context.Context, string) (*User, error)
 	UpdateUserByID(context.Context, User) error
-	DeactivateUserByID(context.Context, int64) error
+	SetActivity(context.Context, int64, bool) error
 	UpdateUserRoleID(context.Context, uint, int64) error
 	ResetPassword(context.Context, User) error
 	DeleteUserByID(context.Context, int64) error
 	Ping(ctx context.Context) error
+	SignIn(context.Context, string, string) error
 }
 
 // StoreImpl  is the blueprint for the users logic
@@ -74,8 +75,8 @@ func (u *StoreImpl) UpdateUserByID(ctx context.Context, user User) error {
 	return nil
 }
 
-func (u *StoreImpl) DeactivateUserByID(ctx context.Context, id int64) error {
-	if err := u.Store.DeactivateUserByID(ctx, id); err != nil {
+func (u *StoreImpl) SetActivity(ctx context.Context, id int64, action bool) error {
+	if err := u.Store.SetActivity(ctx, id, action); err != nil {
 		log.WithFields(logrus.Fields{
 			"id":    id,
 			"error": err,
@@ -163,6 +164,17 @@ func (u *StoreImpl) Ping(ctx context.Context) error {
 		log.WithFields(logrus.Fields{
 			"error": err,
 		}).Error("Error pinging database")
+		return err
+	}
+	return nil
+}
+
+// SignIn - signs in a user
+func (u *StoreImpl) SignIn(ctx context.Context, username, password string) error {
+	if err := u.Store.SignIn(ctx, username, password); err != nil {
+		log.WithFields(logrus.Fields{
+			"error": err,
+		}).Error("Error signing in user")
 		return err
 	}
 	return nil

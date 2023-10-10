@@ -195,20 +195,20 @@ func (d *Database) UpdateUser(ctx context.Context, user User, id uint) error {
 	return nil
 }
 
-func (d *Database) DeactivateUserByID(ctx context.Context, id int64) error {
+func (d *Database) SetActivity(ctx context.Context, id int64, action bool) error {
 	var user User
 	if err := d.Client.WithContext(ctx).Where("id = ?", id).First(&user).Error; err != nil {
 		d.Logger.WithFields(logrus.Fields{
-			"function": "DeactivateUserByID",
+			"function": "SetActivity",
 			"ID":       id,
 			"error":    err,
 		}).Error("Error fetching user by ID for deactivation")
 		return fmt.Errorf("error fetching user by ID %d for deactivation: %w", id, err)
 	}
-	user.IsActive = false
+	user.IsActive = action
 	if err := d.Client.WithContext(ctx).Save(&user).Error; err != nil {
 		d.Logger.WithFields(logrus.Fields{
-			"function": "DeactivateUserByID",
+			"function": "SetActivity",
 			"ID":       id,
 			"error":    err,
 		}).Error("Error deactivating user")
@@ -290,5 +290,29 @@ func (d *Database) DeleteUserByID(ctx context.Context, id string) error {
 	d.Logger.WithFields(logrus.Fields{
 		"id": id,
 	}).Info("User deleted successfully")
+	return nil
+}
+
+func (d *Database) SignIn(ctx context.Context, username, password string) error {
+	var user User
+	err := d.Client.WithContext(ctx).Where("username = ?", username).First(&user).Error
+	if err != nil {
+		if errors.Is(gorm.ErrRecordNotFound, err) {
+			return errors.New("invalid credentials")
+		}
+		d.Logger.WithFields(logrus.Fields{
+			"function": "SignIn",
+			"username": username,
+			"error":    err,
+		}).Error("Error fetching user by username")
+		return fmt.Errorf("error fetching user by username %s: %w", username, err)
+	}
+
+	// Use ComparePassword function to compare the passwords
+	if !ComparePassword(password, user.Password) {
+		return errors.New("invalid credentials")
+	}
+
+	// If the passwords match, sign-in is successful, return nil (no error)
 	return nil
 }

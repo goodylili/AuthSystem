@@ -65,7 +65,7 @@ func (h *Handler) mapRoutes() {
 		v1.GET("/:username", h.GetByUsername)
 		v1.GET("/full_name/:full_name", h.GetUserByFullName)
 		v1.PUT("/:id", h.UpdateUserByID)
-		v1.PUT("/:id", h.DeactivateUserByID)
+		v1.PUT("/:id", h.SetActivity)
 	}
 
 }
