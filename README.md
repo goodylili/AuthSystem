@@ -6,7 +6,7 @@
    <a href="https://golang.org"><img src="https://img.shields.io/badge/Made%20with-Go-1f425f.svg" alt="made-with-Go"></a>
    <a href="https://goreportcard.com/report/github.com/goodnessuc/authsystem"><img src="https://goreportcard.com/badge/github.com/goodnessuc/authsystem" alt="GoReportCard"></a>
    <a href="https://github.com/goodnessuc/authsystem"><img src="https://img.shields.io/github/go-mod/go-version/goodnessuc/authsystem.svg" alt="Go.mod version"></a>
-   <a href="https://github.com/goodnessuc/authsystem/blob/master/LICENCE"><img src="https://img.shields.io/github/license/goodnessuc/authsystem.svg" alt="LICENCE"></a>
+   <a href="https://github.com/Goodnessuc/AuthSystem/blob/main/LICENSE"><img src="https://img.shields.io/github/license/goodnessuc/authsystem.svg" alt="LICENCE"></a>
 </p>
 
 A Complete Backend Service with User Authentication and Authorization 
@@ -36,8 +36,8 @@ The service is designed with security in mind, implementing measures to prevent 
   - [ ] Personal Authentication: Implementing Personal OAuth in Go for the app
 - [x] JWT Authentication: Uses JSON Web Tokens (JWT) for secure information transmission.
 - [ ] Security Measures
-    - [ ] SQL Injection Prevention: Prevents SQL injection attacks.
-    - [ ] CSRF Prevention: Prevents Cross-Site Request Forgery (CSRF) attacks.
+    - [x] SQL Injection Prevention: Prevents SQL injection attacks.
+    - [x] CSRF Prevention: Prevents Cross-Site Request Forgery (CSRF) attacks.
     - [ ] Slowloris Prevention: Prevents Slowloris Attacks
 
 
