@@ -2,12 +2,11 @@
 
 <p align="center">
    <a href="http://makeapullrequest.com"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat" alt=""></a>
-   <a href="https://github.com/ayoisaiah/F2/actions"><img src="https://github.com/ayoisaiah/F2/actions/workflows/test.yml/badge.svg" alt="Github Actions"></a>
+   <a href="https://github.com/goodnessuc/authsystem/actions"><img src="https://github.com/goodnessuc/authsystem/actions/workflows/test.yml/badge.svg" alt="Github Actions"></a>
    <a href="https://golang.org"><img src="https://img.shields.io/badge/Made%20with-Go-1f425f.svg" alt="made-with-Go"></a>
-   <a href="https://goreportcard.com/report/github.com/ayoisaiah/f2"><img src="https://goreportcard.com/badge/github.com/ayoisaiah/f2" alt="GoReportCard"></a>
-   <a href="https://github.com/ayoisaiah/f2"><img src="https://img.shields.io/github/go-mod/go-version/ayoisaiah/f2.svg" alt="Go.mod version"></a>
-   <a href="https://github.com/ayoisaiah/f2/blob/master/LICENCE"><img src="https://img.shields.io/github/license/ayoisaiah/f2.svg" alt="LICENCE"></a>
-   <a href="https://github.com/ayoisaiah/f2/releases/"><img src="https://img.shields.io/github/release/ayoisaiah/f2.svg" alt="Latest release"></a>
+   <a href="https://goreportcard.com/report/github.com/goodnessuc/authsystem"><img src="https://goreportcard.com/badge/github.com/goodnessuc/authsystem" alt="GoReportCard"></a>
+   <a href="https://github.com/goodnessuc/authsystem"><img src="https://img.shields.io/github/go-mod/go-version/goodnessuc/authsystem.svg" alt="Go.mod version"></a>
+   <a href="https://github.com/goodnessuc/authsystem/blob/master/LICENCE"><img src="https://img.shields.io/github/license/goodnessuc/authsystem.svg" alt="LICENCE"></a>
 </p>
 
 A Complete Backend Service with User Authentication and Authorization 
