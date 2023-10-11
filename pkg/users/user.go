@@ -34,6 +34,8 @@ type Service interface {
 	DeleteUserByID(context.Context, int64) error
 	Ping(ctx context.Context) error
 	SignIn(context.Context, string, string) error
+	ChangePassword(ctx context.Context, username string, oldPassword, newPassword string) error
+	ForgotPassword(ctx context.Context, email string) error
 }
 
 // StoreImpl  is the blueprint for the users logic
@@ -175,6 +177,29 @@ func (u *StoreImpl) SignIn(ctx context.Context, username, password string) error
 		log.WithFields(logrus.Fields{
 			"error": err,
 		}).Error("Error signing in user")
+		return err
+	}
+	return nil
+}
+
+// ChangePassword changes the password
+func (u *StoreImpl) ChangePassword(ctx context.Context, username, oldPassword, newPassword string) error {
+	if err := u.Store.ChangePassword(ctx, username, oldPassword, newPassword); err != nil {
+		log.WithFields(logrus.Fields{
+			"error": err,
+		}).Error("Error changing password")
+		return err
+
+	}
+	return nil
+}
+
+// ForgotPassword - sends a password reset link to the user's email
+func (u *StoreImpl) ForgotPassword(ctx context.Context, email string) error {
+	if err := u.Store.ForgotPassword(ctx, email); err != nil {
+		log.WithFields(logrus.Fields{
+			"error": err,
+		}).Error("Error sending password reset link")
 		return err
 	}
 	return nil

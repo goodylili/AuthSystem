@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"Reusable-Auth-System/pkg/auth/jwt"
 	"Reusable-Auth-System/pkg/users"
 	"context"
 	"fmt"
@@ -61,12 +62,13 @@ func (h *Handler) mapRoutes() {
 		v1.POST("/", h.CreateUser)
 		v1.GET("/:id", h.GetUserByID)
 		v1.GET("/email/:email", h.GetByEmail)
-		v1.GET("/username/:username", h.GetByUsername)
+		v1.GET("/username/:username", jwt.AuthMiddleWare(), h.GetByUsername)
 		v1.GET("/:username", h.GetByUsername)
-		v1.GET("/full_name/:full_name", h.GetUserByFullName)
-		v1.PUT("/:id", h.UpdateUserByID)
+		v1.GET("/full_name/:full_name", jwt.AuthMiddleWare(), h.GetUserByFullName)
+		v1.PUT("/:id", jwt.AuthMiddleWare(), h.UpdateUserByID)
 		v1.PUT("/:id", h.SetActivity)
 		v1.POST("/sign_in", h.SignIn)
+		v1.POST("/sign_out", jwt.AuthMiddleWare(), h.SignOut)
 	}
 
 }

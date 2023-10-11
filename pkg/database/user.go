@@ -246,6 +246,7 @@ func (d *Database) ResetPassword(ctx context.Context, newUser users.User) error 
 
 	return nil
 }
+
 func (d *Database) UpdateUserRoleID(ctx context.Context, id uint, newRoleID int64) error {
 	var existingUser User
 	if err := d.Client.WithContext(ctx).Where("id = ?", id).First(&existingUser).Error; err != nil {
@@ -314,5 +315,42 @@ func (d *Database) SignIn(ctx context.Context, username, password string) error 
 	}
 
 	// If the passwords match, sign-in is successful, return nil (no error)
+	return nil
+}
+
+// ChangePassword changes the user's password.
+func (d *Database) ChangePassword(ctx context.Context, username, oldPassword, newPassword string) error {
+	var user User
+	err := d.Client.WithContext(ctx).Where("username = ?", username).First(&user).Error
+	if err != nil {
+		return fmt.Errorf("error fetching user by username: %w", err)
+	}
+
+	if !ComparePassword(oldPassword, user.Password) {
+		return errors.New("invalid old password")
+	}
+
+	hashedNewPassword, err := HashPassword(newPassword)
+	if err != nil {
+		return fmt.Errorf("error hashing new password: %w", err)
+	}
+
+	result := d.Client.WithContext(ctx).Model(&User{}).
+		Where("username = ?", username).
+		Updates(map[string]interface{}{"password": hashedNewPassword})
+
+	if result.Error != nil {
+		return fmt.Errorf("error updating password: %w", result.Error)
+	}
+
+	return nil
+}
+
+// ForgotPassword handles the forgot password process.
+func (d *Database) ForgotPassword(ctx context.Context, email string) error {
+	_, err := d.GetByEmail(ctx, email)
+	if err != nil {
+		return fmt.Errorf("error fetching user by email: %w", err)
+	}
 	return nil
 }

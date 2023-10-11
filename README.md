@@ -21,20 +21,20 @@ The service is designed with security in mind, implementing measures to prevent 
 
 ## Features
 - [x] User Management
-- [ ] User Authentication
-    - [ ] User Registration: Allows new users to create an account.
-    - [ ] User Login: Allows existing users to log in.
-- [ ] Session Management
-    - [ ] Create Session: Creates a session when a user logs in.
-    - [ ] Destroy Session: Destroys the session when a user logs out.
-- [ ] Password Management
-    - [ ] Password Reset: Allows users to reset their password.
-    - [ ] Password Hashing: Hashes passwords before storing them in the database.
+- [x] User Authentication
+    - [x] User Registration: Allows new users to create an account.
+    - [x] User Login: Allows existing users to log in.
+- [x] Session Management
+    - [x] Create Session: Creates a session when a user logs in.
+    - [x] Destroy Session: Destroys the session when a user logs out.
+- [x] Password Management
+    - [x] Password Reset: Allows users to reset their password.
+    - [x] Password Hashing: Hashes passwords before storing them in the database.
 - [ ] Social Authentication: Allows users to log in using their social media accounts.
   - [ ] GitHub Authentication: Allows users to log in through GitHub
   - [ ] Google Authentication: Allows users to log in through Google
   - [ ] Personal Authentication: Implementing Personal OAuth in Go for the app
-- [ ] JWT Authentication: Uses JSON Web Tokens (JWT) for secure information transmission.
+- [x] JWT Authentication: Uses JSON Web Tokens (JWT) for secure information transmission.
 - [ ] Security Measures
     - [ ] SQL Injection Prevention: Prevents SQL injection attacks.
     - [ ] CSRF Prevention: Prevents Cross-Site Request Forgery (CSRF) attacks.

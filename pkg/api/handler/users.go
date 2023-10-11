@@ -216,3 +216,46 @@ func (h *Handler) Ping(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "pong"})
 }
+
+func (h *Handler) SignOut(c *gin.Context) {
+	// Delete the access_token cookie
+	c.SetCookie("access_token", "", -1, "/", "", false, true)
+
+	c.JSON(http.StatusOK, gin.H{"message": "User signed out successfully"})
+}
+
+// ChangePassword is the handler for the change password route
+func (h *Handler) ChangePassword(c *gin.Context) {
+	var req struct {
+		Username    string `json:"username"`
+		OldPassword string `json:"old_password"`
+		NewPassword string `json:"new_password"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	err := h.Users.ChangePassword(c, req.Username, req.OldPassword, req.NewPassword)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Password changed successfully"})
+}
+
+// ForgotPassword is the handler for the forgot password route
+func (h *Handler) ForgotPassword(c *gin.Context) {
+	var req struct {
+		Email string `json:"email"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	err := h.Users.ForgotPassword(c, req.Email)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Password reset link sent successfully"})
+}
