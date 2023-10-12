@@ -282,7 +282,7 @@ func (d *Database) DeleteUserByID(ctx context.Context, id int64) error {
 		return result.Error
 	}
 	if result.RowsAffected == 0 {
-		err := fmt.Errorf("no user found with id %s", id)
+		err := fmt.Errorf("no user found with id %v", id)
 		d.Logger.WithFields(logrus.Fields{
 			"id": id,
 		}).Warn("No user found for deletion")
