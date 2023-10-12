@@ -18,12 +18,14 @@ func Run() error {
 		return err
 	}
 
+	// call the social service when you're doing this
+
 	if err := store.MigrateDB(); err != nil {
 		log.Println("failed to setup store migrations")
 		return err
 	}
 
-	userService := users.NewStoreImpl(store)
+	userService := users.Service(store)
 	httpHandler := handler.NewHandler(userService)
 	if err := httpHandler.Serve(); err != nil {
 		log.Println("failed to gracefully serve our application")

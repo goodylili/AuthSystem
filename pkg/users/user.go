@@ -43,6 +43,13 @@ type StoreImpl struct {
 	Store Service
 }
 
+//// NewService creates a new service
+//func NewService(store Service) StoreImpl {
+//	return StoreImpl{
+//		Store: store,
+//	}
+//}
+
 func (u *StoreImpl) CreateUser(ctx context.Context, user User) error {
 	if err := u.Store.CreateUser(ctx, user); err != nil {
 		log.WithFields(logrus.Fields{

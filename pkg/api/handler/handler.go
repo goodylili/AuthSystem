@@ -2,6 +2,7 @@ package handler
 
 import (
 	"Reusable-Auth-System/pkg/auth/jwt"
+	"Reusable-Auth-System/pkg/auth/social"
 	"Reusable-Auth-System/pkg/users"
 	"context"
 	"fmt"
@@ -69,6 +70,9 @@ func (h *Handler) mapRoutes() {
 		v1.PUT("/:id", h.SetActivity)
 		v1.POST("/sign_in", h.SignIn)
 		v1.POST("/sign_out", jwt.AuthMiddleWare(), h.SignOut)
+		v1.GET("/google/sign_in", social.HandleGoogleLogin)
+		v1.GET("/google/callback", social.HandleGoogleCallback)
+
 	}
 
 }
