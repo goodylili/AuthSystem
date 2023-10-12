@@ -27,7 +27,7 @@ type Service interface {
 	GetByEmail(context.Context, string) (*User, error)
 	GetByUsername(context.Context, string) (*User, error)
 	GetUserByFullName(context.Context, string) (*User, error)
-	UpdateUserByID(context.Context, User) error
+	UpdateUserByID(context.Context, User, int64) error
 	SetActivity(context.Context, int64, bool) error
 	UpdateUserRoleID(context.Context, uint, int64) error
 	ResetPassword(context.Context, User) error
@@ -43,12 +43,12 @@ type StoreImpl struct {
 	Store Service
 }
 
-//// NewService creates a new service
-//func NewService(store Service) StoreImpl {
-//	return StoreImpl{
-//		Store: store,
-//	}
-//}
+// NewService creates a new service
+func NewService(store Service) StoreImpl {
+	return StoreImpl{
+		Store: store,
+	}
+}
 
 func (u *StoreImpl) CreateUser(ctx context.Context, user User) error {
 	if err := u.Store.CreateUser(ctx, user); err != nil {
@@ -72,8 +72,8 @@ func (u *StoreImpl) GetUserByID(ctx context.Context, id int64) (User, error) {
 	return user, nil
 }
 
-func (u *StoreImpl) UpdateUserByID(ctx context.Context, user User) error {
-	if err := u.Store.UpdateUserByID(ctx, user); err != nil {
+func (u *StoreImpl) UpdateUserByID(ctx context.Context, user User, id int64) error {
+	if err := u.Store.UpdateUserByID(ctx, user, id); err != nil {
 		log.WithFields(logrus.Fields{
 			"user":  user,
 			"error": err,

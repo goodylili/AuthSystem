@@ -8,7 +8,7 @@ import (
 	"log"
 )
 
-// Run - is going to be responsible for / the instantiation and startup of our / go application
+// Run - is responsible for the instantiation and startup of our Go application
 func Run() error {
 	fmt.Println("starting up the application...")
 
@@ -18,22 +18,23 @@ func Run() error {
 		return err
 	}
 
-	// call the social service when you're doing this
+	// Call the social service when you're doing this
 
 	if err := store.MigrateDB(); err != nil {
-		log.Println("failed to setup store migrations")
+		log.Println("failed to set up store migrations")
 		return err
 	}
 
-	userService := users.Service(store)
-	httpHandler := handler.NewHandler(userService)
-	if err := httpHandler.Serve(); err != nil {
-		log.Println("failed to gracefully serve our application")
+	userService := users.NewService(store)
+	httpHandler := handler.NewHandler(&userService)
+
+	// StartServer the HTTP server
+	if err := httpHandler.StartServer(); err != nil {
+		log.Fatalf("Server error: %v\n", err)
 		return err
-	}
+	}f
 
 	return nil
-
 }
 
 func main() {

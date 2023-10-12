@@ -156,10 +156,10 @@ func (d *Database) GetUserByFullName(ctx context.Context, fullName string) (*use
 	}, nil
 }
 
-func (d *Database) UpdateUser(ctx context.Context, user User, id uint) error {
+func (d *Database) UpdateUserByID(ctx context.Context, user users.User, id int64) error {
 	var existingUser User
 	if err := d.Client.WithContext(ctx).Where("id = ?", id).First(&existingUser).Error; err != nil {
-		d.Logger.Error("Error querying user", zap.Uint("ID", id), zap.Error(err))
+		d.Logger.Error("Error querying user", zap.Int64("ID", id), zap.Error(err))
 		return fmt.Errorf("error querying user: %w", err)
 	}
 	updateColumns := make(map[string]interface{})
@@ -188,7 +188,7 @@ func (d *Database) UpdateUser(ctx context.Context, user User, id uint) error {
 	}
 
 	if err := d.Client.WithContext(ctx).Model(&existingUser).Omit("RoleID", "IsActive", "Password").Updates(updateColumns).Error; err != nil {
-		d.Logger.Error("Error updating user", zap.Uint("ID", id), zap.Error(err))
+		d.Logger.Error("Error updating user", zap.Int64("ID", id), zap.Error(err))
 		return fmt.Errorf("error updating user: %w", err)
 	}
 
@@ -272,7 +272,7 @@ func (d *Database) UpdateUserRoleID(ctx context.Context, id uint, newRoleID int6
 	return nil
 }
 
-func (d *Database) DeleteUserByID(ctx context.Context, id string) error {
+func (d *Database) DeleteUserByID(ctx context.Context, id int64) error {
 	result := d.Client.WithContext(ctx).Delete(&User{}, id)
 	if result.Error != nil {
 		d.Logger.WithFields(logrus.Fields{

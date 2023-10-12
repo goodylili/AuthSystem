@@ -49,13 +49,13 @@ func (h *Handler) GetUserByID(c *gin.Context) {
 }
 
 func (h *Handler) GetByEmail(c *gin.Context) {
-	email := c.Param("email")
-	if email == "" {
+	mail := c.Param("mail")
+	if mail == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Email is required"})
 		return
 	}
 
-	user, err := h.Users.GetByEmail(c, email)
+	user, err := h.Users.GetByEmail(c, mail)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -87,7 +87,7 @@ func (h *Handler) UpdateUserByID(c *gin.Context) {
 		return
 	}
 
-	if err := h.Users.UpdateUserByID(c, user); err != nil {
+	if err := h.Users.UpdateUserByID(c, user, int64(user.ID)); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

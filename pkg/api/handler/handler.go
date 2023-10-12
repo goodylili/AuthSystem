@@ -5,7 +5,7 @@ import (
 	"Reusable-Auth-System/pkg/auth/social"
 	"Reusable-Auth-System/pkg/users"
 	"context"
-	"fmt"
+	"errors"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -23,20 +23,48 @@ type Handler struct {
 	Server *http.Server
 }
 
+// StartServer - gracefully serves our newly set up handler function
+func (h *Handler) StartServer() error {
+	// StartServer the Gin server in a goroutine
+	go func() {
+		if err := h.Server.ListenAndServe(); err != nil && !errors.Is(http.ErrServerClosed, err) {
+			log.Fatalf("ListenAndServe: %v\n", err)
+		}
+	}()
+
+	// Listen for a termination signal (SIGTERM)
+	c := make(chan os.Signal, 1)
+	signal.Notify(c, syscall.SIGTERM)
+	<-c
+
+	// Create a context with a timeout for graceful shutdown
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancel()
+
+	// Attempt to gracefully shut down the server
+	if err := h.Server.Shutdown(ctx); err != nil {
+		log.Fatalf("Server shutdown failed: %v\n", err)
+	}
+
+	log.Println("Server shut down gracefully")
+	return nil
+}
+
 // NewHandler - returns a pointer to a Handler
 func NewHandler(users users.Service) *Handler {
 	log.Println("setting up our handlers")
 	handler := &Handler{
 		Users: users,
 	}
+
 	// Create a new Gin router
 	handler.Router = gin.Default()
 
 	corsConfig := cors.DefaultConfig()
+
 	// corsConfig.AllowAllOrigins = true
 	corsConfig.AllowHeaders = []string{"Origin", "Authorization", "Content-Length", "Content-Type"}
 	corsConfig.ExposeHeaders = []string{"Content-Length"}
-	corsConfig.AllowOrigins = []string{"*", "http://localhost:8080"}
 
 	// Registering MiddleWares
 	handler.Router.Use(cors.New(corsConfig))
@@ -49,8 +77,13 @@ func NewHandler(users users.Service) *Handler {
 		})
 	})
 
-	return handler
+	// Initialize your HTTP server with the Gin router
+	handler.Server = &http.Server{
+		Addr:    ":8080", // Set the server address
+		Handler: handler.Router,
+	}
 
+	return handler
 }
 
 func (h *Handler) mapRoutes() {
@@ -81,30 +114,4 @@ func AliveCheck(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"message": "Alive!",
 	})
-}
-
-// Serve - gracefully serves our newly set up handler function
-func (h *Handler) Serve() error {
-	go func() {
-		err := h.Router.Run(fmt.Sprintf(":%v", 8080))
-		if err != nil {
-			log.Println(err)
-
-		}
-	}()
-
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, syscall.SIGTERM)
-	<-c
-
-	// CreateAccount a deadline to wait for
-	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
-	defer cancel()
-	err := h.Server.Shutdown(ctx)
-	if err != nil {
-		return err
-	}
-
-	log.Println("shutting down gracefully")
-	return nil
 }
