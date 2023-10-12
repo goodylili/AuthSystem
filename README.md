@@ -32,7 +32,7 @@ CSRF attacks, and brute force attacks.
 - [x] Password Management
     - [x] Password Reset: Allows users to reset their password.
     - [x] Password Hashing: Hashes passwords before storing them in the database.
-- [ ] Social Authentication: Allows users to log in using their social media accounts.
+- [x] Social Authentication: Allows users to log in using their social media accounts.
     - [x] GitH ub Authentication: Allows users to log in through GitHub
     - [x] Google Authentication: Allows users to log in through Google
 - [x] JWT Authentication: Uses JSON Web Tokens (JWT) for secure information transmission.
