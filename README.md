@@ -8,17 +8,20 @@
    <a href="https://github.com/goodnessuc/authsystem/blob/master/LICENSE"><img src="https://img.shields.io/github/license/goodnessuc/authsystem.svg" alt="LICENSE"></a>
 </p>
 
-A Complete Backend Service with User Authentication and Authorization 
+A Complete Backend Service with User Authentication and Authorization
 
 ## Description
-This repository contains a backend service developed in GoLang that handles user authentication and authorization. 
 
-It includes functionalities like user registration, login, password reset, social authentication (e.g., GitHub, Google, Twitter), and JWT authentication. 
+This repository contains a backend service developed in GoLang that handles user authentication and authorization.
 
-The service is designed with security in mind, implementing measures to prevent common attacks such as SQL injection, CSRF attacks, and brute force attacks.
+It includes functionalities like user registration, login, password reset, social authentication (e.g., GitHub, Google,
+Twitter), and JWT authentication.
 
+The service is designed with security in mind, implementing measures to prevent common attacks such as SQL injection,
+CSRF attacks, and brute force attacks.
 
 ## Features
+
 - [x] User Management
 - [x] User Authentication
     - [x] User Registration: Allows new users to create an account.
@@ -30,19 +33,19 @@ The service is designed with security in mind, implementing measures to prevent 
     - [x] Password Reset: Allows users to reset their password.
     - [x] Password Hashing: Hashes passwords before storing them in the database.
 - [ ] Social Authentication: Allows users to log in using their social media accounts.
-  - [ ] GitHub Authentication: Allows users to log in through GitHub
-  - [ ] Google Authentication: Allows users to log in through Google
-  - [ ] Personal Authentication: Implementing Personal OAuth in Go for the app
+    - [x] GitH ub Authentication: Allows users to log in through GitHub
+    - [x] Google Authentication: Allows users to log in through Google
 - [x] JWT Authentication: Uses JSON Web Tokens (JWT) for secure information transmission.
-- [ ] Security Measures
+- [x] Security Measures
     - [x] SQL Injection Prevention: Prevents SQL injection attacks.
     - [x] CSRF Prevention: Prevents Cross-Site Request Forgery (CSRF) attacks.
-    - [ ] Slowloris Prevention: Prevents Slowloris Attacks
-
+    - [x] Slowloris Prevention: Prevents Slowloris Attacks
 
 ## Contributions
+
 Contributions, issues, and feature requests are welcome!
 
 ## License
+
 MIT
 
