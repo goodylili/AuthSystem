@@ -32,7 +32,7 @@ func Run() error {
 	if err := httpHandler.StartServer(); err != nil {
 		log.Fatalf("Server error: %v\n", err)
 		return err
-	}f
+	}
 
 	return nil
 }
