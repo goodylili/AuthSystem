@@ -2,6 +2,7 @@ package handler
 
 import (
 	JWTtoken "Reusable-Auth-System/pkg/auth/jwt"
+	"Reusable-Auth-System/pkg/email"
 	"Reusable-Auth-System/pkg/users"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -20,7 +21,14 @@ func (h *Handler) CreateUser(c *gin.Context) {
 		return
 	}
 
+	err := email.SendWelcomeMessage(user.Username, "http://localhost:8080/activate", user.Email)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
 	c.JSON(http.StatusCreated, user)
+
 }
 
 func (h *Handler) GetUserByID(c *gin.Context) {
@@ -230,6 +238,7 @@ func (h *Handler) ChangePassword(c *gin.Context) {
 		Username    string `json:"username"`
 		OldPassword string `json:"old_password"`
 		NewPassword string `json:"new_password"`
+		Email       string `json:"email"`
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -240,13 +249,21 @@ func (h *Handler) ChangePassword(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+
+	err = email.SendPassWordResetMessage(req.Username, "http://localhost:8080/activate", req.Email)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{"message": "Password changed successfully"})
 }
 
 // ForgotPassword is the handler for the forgot password route
 func (h *Handler) ForgotPassword(c *gin.Context) {
 	var req struct {
-		Email string `json:"email"`
+		Email    string `json:"email"`
+		Username string `json:"username"`
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -257,5 +274,12 @@ func (h *Handler) ForgotPassword(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+
+	err = email.SendPassWordResetMessage(req.Username, "http://localhost:8080/activate", req.Email)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{"message": "Password reset link sent successfully"})
 }
