@@ -6,7 +6,7 @@ The Users API allows for the creation, retrieval, updating, and management of us
 
 ## **Index**
 
-- **[Endpointegers](#endpointegers)**
+- **[Endpoints](#Endpoints)**
     - [Create User](#create-user)
     - [Retrieve User by ID](#retrieve-user-by-id)
     - [Update User](#update-user)
@@ -35,11 +35,11 @@ The Users API allows for the creation, retrieval, updating, and management of us
 
 ---
 
-## **Endpointegers**:
+## **Endpoints**:
 
 ### <a name="create-user"></a>**1. Create User**
 
-- **Endpointeger**: `/create`
+- **Endpoint**: `/create`
 - **HTTP Method**: `POST`
 - **Description**: Registers a new user with the provided details.
 
@@ -64,7 +64,7 @@ The Users API allows for the creation, retrieval, updating, and management of us
 
 ### <a name="retrieve-user-by-id"></a>**2. Retrieve User by ID**
 
-- **Endpointeger**: `/{id}`
+- **Endpoint**: `/{id}`
 - **HTTP Method**: `GET`
 - **Description**: Fetches details of a specific user using their unique ID.
 
@@ -82,7 +82,7 @@ The Users API allows for the creation, retrieval, updating, and management of us
 
 ### <a name="update-user"></a>**3. Update User**
 
-- **Endpointeger**: `/{id}/update`
+- **Endpoint**: `/{id}/update`
 - **HTTP Method**: `PUT`
 - **Description**: Modifies the details of an existing user.
 
@@ -112,7 +112,7 @@ The Users API allows for the creation, retrieval, updating, and management of us
 
 ### <a name="set-user-activity-status"></a>**4. Set User Activity Status**
 
-- **Endpointeger**: `/{id}/status`
+- **Endpoint**: `/{id}/status`
 - **HTTP Method**: `PUT`
 - **Description**: Updates the status of a user (activate/deactivate).
 
@@ -139,7 +139,7 @@ The Users API allows for the creation, retrieval, updating, and management of us
 
 ### <a name="retrieve-user-by-email"></a>**5. Retrieve User by Email**
 
-- **Endpointeger**: `/email/{email}`
+- **Endpoint**: `/email/{email}`
 - **HTTP Method**: `GET`
 - **Description**: Fetches user details based on their email address.
 
@@ -158,7 +158,7 @@ The Users API allows for the creation, retrieval, updating, and management of us
 
 ### <a name="retrieve-user-by-username"></a>**6. Retrieve User by Username**
 
-- **Endpointeger**: `/username/{username}`
+- **Endpoint**: `/username/{username}`
 - **HTTP Method**: `GET`
 - **Description**: Fetches user details based on their username.
 
@@ -176,7 +176,7 @@ The Users API allows for the creation, retrieval, updating, and management of us
 
 ### <a name="retrieve-user-by-full-name"></a>**7. Retrieve User by Full Name**
 
-- **Endpointeger**: `/fullname/{fullName}`
+- **Endpoint**: `/fullname/{fullName}`
 - **HTTP Method**: `GET`
 - **Description**: Fetches user details based on their full name.
 
@@ -195,7 +195,7 @@ The Users API allows for the creation, retrieval, updating, and management of us
 
 ### <a name="change-password"></a>**8. Change Password**
 
-- **Endpointeger**: `/password/change`
+- **Endpoint**: `/password/change`
 - **HTTP Method**: `PUT`
 - **Description**: Changes the user's password.
 
@@ -219,7 +219,7 @@ The Users API allows for the creation, retrieval, updating, and management of us
 
 ### <a name="reset-password"></a>**9. Reset Password**
 
-- **Endpointeger**: `/password/reset`
+- **Endpoint**: `/password/reset`
 - **HTTP Method**: `PUT`
 - **Description**: Resets the user's password.
 
@@ -245,7 +245,7 @@ Password successfully reset.
 
 ### <a name="forgot-password"></a>**10. Forgot Password**
 
-- **Endpointeger**: `/password/forgot`
+- **Endpoint**: `/password/forgot`
 - **HTTP Method**: `POST`
 - **Description**: Handles the forgot password process.
 
