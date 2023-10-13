@@ -15,7 +15,8 @@ This document outlines the distinct data types utilized within our system, provi
     - [Role Permissions Map](#role-permissions-map)
 ---
 
-### **1. User Type**
+### <a name="user-type"></a>1. User Type
+
 
 The User type encapsulates the essential information related to an individual user within the system. This includes their personal details, contact information, and account status. It's crucial to ensure that each field adheres to the defined constraints to maintain data integrity and user privacy.
 
@@ -33,7 +34,8 @@ The User type encapsulates the essential information related to an individual us
 
 ---
 
-### **2. Permissions**
+### <a name="permissions"></a>2. Permissions
+
 
 Permissions are predefined constants that represent the different levels of access a user can have within the system. They are crucial for implementing role-based access control, ensuring that users have the appropriate level of access to perform various actions within the system.
 
@@ -47,11 +49,12 @@ Permissions are predefined constants that represent the different levels of acce
 
 ---
 
-### **3. Roles and Permissions Mapping**
+### <a name="roles-and-permissions-mapping"></a>3. Roles and Permissions Mapping
 
 Roles and Permissions Mapping is a system by which different roles are associated with specific permissions. This mapping is crucial for managing access control within the system, ensuring that each user has the right permissions based on their role. The following tables provide a detailed breakdown of the role constants and the permissions mapped to each role.
 
-#### **Role Constants**
+#### <a name="role-constants"></a>Role Constants
+
 
 | Constant      | Value | Description   |
 |---------------|-------|---------------|
@@ -59,7 +62,7 @@ Roles and Permissions Mapping is a system by which different roles are associate
 | `RoleUser`    | 1     | User          |
 | `RoleAdmin`   | 2     | Admin         |
 
-#### **Role Permissions Map**
+#### <a name="role-permissions-map"></a>Role Permissions Map
 
 | Role         | Permissions |
 |--------------|-------------|
