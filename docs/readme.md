@@ -42,13 +42,6 @@ To ensure your database connectivity is intact:
 
 - `200 OK`: Database is alive and responding.
 - `500 Internal Server Error`: Database connection issues or the service is down.
-
----
-
-### <a name="api-endpoints-overview"></a>**3. API Endpoints Overview**
-
-For a deep dive into each category of endpoints, refer to the detailed documentation:
-
 ---
 
 ### <a name="api-endpoints-overview"></a>**4. API Endpoints Overview**
