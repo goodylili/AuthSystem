@@ -18,3 +18,18 @@ func ComparePassword(password, hashedPassword string) bool {
 	}
 	return true
 }
+
+// HasPermission checks if the user has a permission
+func (d *Database) HasPermission(userID int64, permission int) bool {
+	var user User
+	err := d.Client.Where("id = ?", userID).First(&user).Error
+	if err != nil {
+		return false
+	}
+	for _, perm := range RolePermissionsMap[int(user.RoleID)] {
+		if perm == permission {
+			return true
+		}
+	}
+	return false
+}

@@ -7,9 +7,6 @@ const (
 	CanViewUsers
 	CanDeactivateUsers
 	CanGetUsersByFullName
-	CanAssignRoles
-	CanViewAllUsersWithRoles
-	CanModifyUserRolesAndPermissions
 )
 
 // RolePermissionsMap maps roles to their associated permissions.
@@ -27,15 +24,5 @@ var RolePermissionsMap = map[int][]int{
 		CanViewUsers,
 		CanDeactivateUsers,
 		CanGetUsersByFullName,
-	},
-	RoleSuperAdmin: {
-		CanCreateAccount,
-		CanUpdateDetails,
-		CanViewUsers,
-		CanDeactivateUsers,
-		CanGetUsersByFullName,
-		CanAssignRoles,
-		CanViewAllUsersWithRoles,
-		CanModifyUserRolesAndPermissions,
 	},
 }

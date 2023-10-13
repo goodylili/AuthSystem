@@ -25,6 +25,10 @@ type User struct {
 }
 
 func (d *Database) CreateUser(ctx context.Context, user users.User) error {
+	if !d.HasPermission(int64(user.ID), CanCreateAccount) {
+		return errors.New("access denied: insufficient permissions")
+	}
+
 	d.Logger.WithFields(logrus.Fields{
 		"function": "CreateUser",
 		"user":     user,
@@ -54,6 +58,11 @@ func (d *Database) CreateUser(ctx context.Context, user users.User) error {
 }
 
 func (d *Database) GetUserByID(ctx context.Context, id int64) (users.User, error) {
+
+	if !d.HasPermission(id, CanViewUsers) {
+		return users.User{}, errors.New("access denied: insufficient permissions")
+	}
+
 	var user User
 	err := d.Client.WithContext(ctx).Where("id = ?", id).First(&user).Error
 	if err != nil {
@@ -77,6 +86,7 @@ func (d *Database) GetUserByID(ctx context.Context, id int64) (users.User, error
 
 func (d *Database) GetByEmail(ctx context.Context, email string) (*users.User, error) {
 	var user User
+
 	err := d.Client.WithContext(ctx).Where("email = ?", email).First(&user).Error
 	if err != nil {
 		d.Logger.WithFields(logrus.Fields{
@@ -86,6 +96,11 @@ func (d *Database) GetByEmail(ctx context.Context, email string) (*users.User, e
 		}).Error("Error fetching user by email")
 		return nil, fmt.Errorf("error fetching user by email %s: %w", email, err)
 	}
+
+	if !d.HasPermission(int64(user.ID), CanViewUsers) {
+		return &users.User{}, errors.New("access denied: insufficient permissions")
+	}
+
 	return &users.User{
 		FirstName: user.FirstName,
 		LastName:  user.LastName,
@@ -108,6 +123,11 @@ func (d *Database) GetByUsername(ctx context.Context, username string) (*users.U
 		}).Error("Error fetching user by username")
 		return nil, fmt.Errorf("error fetching user by username %s: %w", username, err)
 	}
+
+	if !d.HasPermission(int64(user.ID), CanViewUsers) {
+		return &users.User{}, errors.New("access denied: insufficient permissions")
+	}
+
 	return &users.User{
 		FirstName: user.FirstName,
 		LastName:  user.LastName,
@@ -143,6 +163,10 @@ func (d *Database) GetUserByFullName(ctx context.Context, fullName string) (*use
 			"error":    err,
 		}).Error("Error fetching user by full name")
 		return nil, fmt.Errorf("error fetching user by full name %s: %w", fullName, err)
+	}
+
+	if !d.HasPermission(int64(user.ID), CanViewUsers) {
+		return &users.User{}, errors.New("access denied: insufficient permissions")
 	}
 
 	return &users.User{
@@ -187,6 +211,10 @@ func (d *Database) UpdateUserByID(ctx context.Context, user users.User, id int64
 		return nil // Nothing to update
 	}
 
+	if !d.HasPermission(int64(user.ID), CanUpdateDetails) {
+		return errors.New("access denied: insufficient permissions")
+	}
+
 	if err := d.Client.WithContext(ctx).Model(&existingUser).Omit("RoleID", "IsActive", "Password").Updates(updateColumns).Error; err != nil {
 		d.Logger.Error("Error updating user", zap.Int64("ID", id), zap.Error(err))
 		return fmt.Errorf("error updating user: %w", err)
@@ -213,6 +241,10 @@ func (d *Database) SetActivity(ctx context.Context, id int64, action bool) error
 			"error":    err,
 		}).Error("Error deactivating user")
 		return fmt.Errorf("error deactivating user: %w", err)
+	}
+
+	if !d.HasPermission(int64(user.ID), CanUpdateDetails) {
+		return errors.New("access denied: insufficient permissions")
 	}
 
 	return nil

@@ -5,5 +5,4 @@ const (
 	RoleBasicUser = iota
 	RoleUser
 	RoleAdmin
-	RoleSuperAdmin
 )
