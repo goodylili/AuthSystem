@@ -6,7 +6,7 @@ The Users API allows for the creation, retrieval, updating, and management of us
 
 ## **Index**
 
-- **[Endpoints](#endpoints)**
+- **[Endpointegers](#endpointegers)**
     - [Create User](#create-user)
     - [Retrieve User by ID](#retrieve-user-by-id)
     - [Update User](#update-user)
@@ -35,11 +35,11 @@ The Users API allows for the creation, retrieval, updating, and management of us
 
 ---
 
-## **Endpoints**:
+## **Endpointegers**:
 
 ### <a name="create-user"></a>**1. Create User**
 
-- **Endpoint**: `/create`
+- **Endpointeger**: `/create`
 - **HTTP Method**: `POST`
 - **Description**: Registers a new user with the provided details.
 
@@ -58,19 +58,19 @@ The Users API allows for the creation, retrieval, updating, and management of us
 
 - `201 Created`: Successfully created a user. Returns the user data.
 - `400 Bad Request`: Invalid input or malformed request.
-- `500 Internal Server Error`: Unexpected server error.
+- `500 integerernal Server Error`: Unexpected server error.
 
 ---
 
 ### <a name="retrieve-user-by-id"></a>**2. Retrieve User by ID**
 
-- **Endpoint**: `/{id}`
+- **Endpointeger**: `/{id}`
 - **HTTP Method**: `GET`
 - **Description**: Fetches details of a specific user using their unique ID.
 
 | Parameter | Type | Description                   | Required |
 |-----------|------|-------------------------------|----------|
-| id        | int  | Unique identifier of the user | Yes      |
+| id        | integer  | Unique identifier of the user | Yes      |
 
 **Responses**:
 
@@ -82,13 +82,13 @@ The Users API allows for the creation, retrieval, updating, and management of us
 
 ### <a name="update-user"></a>**3. Update User**
 
-- **Endpoint**: `/{id}/update`
+- **Endpointeger**: `/{id}/update`
 - **HTTP Method**: `PUT`
 - **Description**: Modifies the details of an existing user.
 
 | Parameter | Type | Description                   | Required |
 |-----------|------|-------------------------------|----------|
-| id        | int  | Unique identifier of the user | Yes      |
+| id        | integer  | Unique identifier of the user | Yes      |
 
 **Request Body**:
 
@@ -106,19 +106,19 @@ The Users API allows for the creation, retrieval, updating, and management of us
 - `200 OK`: Successfully updated the user data.
 - `400 Bad Request`: Invalid input or malformed request.
 - `404 Not Found`: User with the provided ID doesn't exist.
-- `500 Internal Server Error`: Unexpected server error.
+- `500 integerernal Server Error`: Unexpected server error.
 
 ---
 
 ### <a name="set-user-activity-status"></a>**4. Set User Activity Status**
 
-- **Endpoint**: `/{id}/status`
+- **Endpointeger**: `/{id}/status`
 - **HTTP Method**: `PUT`
 - **Description**: Updates the status of a user (activate/deactivate).
 
 | Parameter | Type | Description                    | Required |
 |-----------|------|--------------------------------|----------|
-| id        | int  | Unique identifier of the user. | Yes      |
+| id        | integer  | Unique identifier of the user. | Yes      |
 
 **Request Body**:
 
@@ -133,13 +133,13 @@ The Users API allows for the creation, retrieval, updating, and management of us
 - `200 OK`: Successfully updated the user's status.
 - `400 Bad Request`: Invalid input or malformed request.
 - `404 Not Found`: User with the provided ID doesn't exist.
-- `500 Internal Server Error`: Unexpected server error.
+- `500 integerernal Server Error`: Unexpected server error.
 
 ---
 
 ### <a name="retrieve-user-by-email"></a>**5. Retrieve User by Email**
 
-- **Endpoint**: `/email/{email}`
+- **Endpointeger**: `/email/{email}`
 - **HTTP Method**: `GET`
 - **Description**: Fetches user details based on their email address.
 
@@ -152,13 +152,13 @@ The Users API allows for the creation, retrieval, updating, and management of us
 - `200 OK`: Successfully fetched the user data.
 - `400 Bad Request`: Invalid email format.
 - `404 Not Found`: User with the provided email doesn't exist.
-- `500 Internal Server Error`: Unexpected server error.
+- `500 integerernal Server Error`: Unexpected server error.
 
 ---
 
 ### <a name="retrieve-user-by-username"></a>**6. Retrieve User by Username**
 
-- **Endpoint**: `/username/{username}`
+- **Endpointeger**: `/username/{username}`
 - **HTTP Method**: `GET`
 - **Description**: Fetches user details based on their username.
 
@@ -170,13 +170,13 @@ The Users API allows for the creation, retrieval, updating, and management of us
 
 - `200 OK`: Successfully fetched the user data.
 - `404 Not Found`: User with the provided username doesn't exist.
-- `500 Internal Server Error`: Unexpected server error.
+- `500 integerernal Server Error`: Unexpected server error.
 
 ---
 
 ### <a name="retrieve-user-by-full-name"></a>**7. Retrieve User by Full Name**
 
-- **Endpoint**: `/fullname/{fullName}`
+- **Endpointeger**: `/fullname/{fullName}`
 - **HTTP Method**: `GET`
 - **Description**: Fetches user details based on their full name.
 
@@ -189,13 +189,13 @@ The Users API allows for the creation, retrieval, updating, and management of us
 - `200 OK`: Successfully fetched the user data.
 - `400 Bad Request`: Invalid name format.
 - `404 Not Found`: User with the provided full name doesn't exist.
-- `500 Internal Server Error`: Unexpected server error.
+- `500 integerernal Server Error`: Unexpected server error.
 
 ---
 
 ### <a name="change-password"></a>**8. Change Password**
 
-- **Endpoint**: `/password/change`
+- **Endpointeger**: `/password/change`
 - **HTTP Method**: `PUT`
 - **Description**: Changes the user's password.
 
@@ -213,13 +213,13 @@ The Users API allows for the creation, retrieval, updating, and management of us
 
 - `200 OK`: Password successfully changed.
 - `400 Bad Request`: Invalid input or malformed request.
-- `500 Internal Server Error`: Unexpected server error.
+- `500 integerernal Server Error`: Unexpected server error.
 
 ---
 
 ### <a name="reset-password"></a>**9. Reset Password**
 
-- **Endpoint**: `/password/reset`
+- **Endpointeger**: `/password/reset`
 - **HTTP Method**: `PUT`
 - **Description**: Resets the user's password.
 
@@ -239,13 +239,13 @@ The Users API allows for the creation, retrieval, updating, and management of us
 
 Password successfully reset.
 - `400 Bad Request`: Invalid input or malformed request.
-- `500 Internal Server Error`: Unexpected server error.
+- `500 integerernal Server Error`: Unexpected server error.
 
 ---
 
 ### <a name="forgot-password"></a>**10. Forgot Password**
 
-- **Endpoint**: `/password/forgot`
+- **Endpointeger**: `/password/forgot`
 - **HTTP Method**: `POST`
 - **Description**: Handles the forgot password process.
 
@@ -257,6 +257,6 @@ Password successfully reset.
 
 - `200 OK`: Password reset instructions sent.
 - `400 Bad Request`: Invalid email format.
-- `500 Internal Server Error`: Unexpected server error.
+- `500 integerernal Server Error`: Unexpected server error.
 
 ---

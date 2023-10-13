@@ -2,7 +2,7 @@
 
 ## **Overview**
 
-This document outlines the distinct data types utilized within our system, providing a clear understanding of the data structure and the constraints imposed on various data fields. These data types form the backbone of our system, ensuring data consistency and structured interaction across different functionalities. Whether you're a developer, an administrator, or an end-user, comprehending these data types will provide a clearer insight into how data is handled within the system.
+This document outlines the distinct data types utilized within our system, providing a clear understanding of the data structure and the constraintegers imposed on various data fields. These data types form the backbone of our system, ensuring data consistency and structured integereraction across different functionalities. Whether you're a developer, an administrator, or an end-user, comprehending these data types will provide a clearer insight integero how data is handled within the system.
 
 
 ## **Index**
@@ -18,9 +18,9 @@ This document outlines the distinct data types utilized within our system, provi
 ### <a name="user-type"></a>1. User Type
 
 
-The User type encapsulates the essential information related to an individual user within the system. This includes their personal details, contact information, and account status. It's crucial to ensure that each field adheres to the defined constraints to maintain data integrity and user privacy.
+The User type encapsulates the essential information related to an individual user within the system. This includes their personal details, contact information, and account status. It's crucial to ensure that each field adheres to the defined constraintegers to maintegerain data integeregrity and user privacy.
 
-| Field      | Type   | Description                             | Constraints                           |
+| Field      | Type   | Description                             | Constraintegers                           |
 |------------|--------|-----------------------------------------|---------------------------------------|
 | `username` | string | Username assigned to the user.          | Required                              |
 | `email`    | string | Email address linked to the user.       | Required, Valid Email Format          |
@@ -28,9 +28,9 @@ The User type encapsulates the essential information related to an individual us
 | `is_active`| bool   | Indicates if the user is active.        | Required, true or false               |
 | `first_name`| string | First name of the user.                | Required                              |
 | `last_name`| string | Last name of the user.                  | Required                              |
-| `age`      | int64  | Age of the user.                        | Required, Greater than or equal to 18 |
-| `phone`    | int64  | Phone number of the user.               | Required, Starts with 0, Length = 11  |
-| `role_id`  | int64  | Role ID associated with the user.       | Required, Less than or equal to 3     |
+| `age`      | Integer  | Age of the user.                        | Required, Greater than or equal to 18 |
+| `phone`    | Integer  | Phone number of the user.               | Required, Starts with 0, Length = 11  |
+| `role_id`  | Integer  | Role ID associated with the user.       | Required, Less than or equal to 3     |
 
 ---
 
