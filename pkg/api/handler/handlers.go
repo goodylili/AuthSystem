@@ -23,9 +23,9 @@ type Handler struct {
 	Server *http.Server
 }
 
-// StartServer - gracefully serves our newly set up handler function
-func (h *Handler) StartServer() error {
-	// StartServer the Gin server in a goroutine
+// Initialize - gracefully serves our newly set up handler function
+func (h *Handler) Initialize() error {
+	// Initialize the Gin server in a goroutine
 	go func() {
 		if err := h.Server.ListenAndServe(); err != nil && !errors.Is(http.ErrServerClosed, err) {
 			log.Fatalf("ListenAndServe: %v\n", err)
@@ -79,8 +79,7 @@ func NewHandler(users users.Service) *Handler {
 
 	// Initialize your HTTP server with the Gin router
 	handler.Server = &http.Server{
-		Addr:    ":8080", // Set the server address
-		Handler: handler.Router,
+		Addr: ":8080", // Set the server address
 	}
 
 	return handler
@@ -101,10 +100,13 @@ func (h *Handler) mapRoutes() {
 		v1.GET("/full_name/:full_name", jwt.AuthMiddleWare(), h.GetUserByFullName)
 		v1.PUT("/:id", jwt.AuthMiddleWare(), h.UpdateUserByID)
 		v1.PUT("/:id", h.SetActivity)
+
 		v1.POST("/sign_in", h.SignIn)
 		v1.POST("/sign_out", jwt.AuthMiddleWare(), h.SignOut)
 		v1.GET("/google/sign_in", social.HandleGoogleLogin)
 		v1.GET("/google/callback", social.HandleGoogleCallback)
+		v1.GET("/github/sign_in", social.HandleGitHubLogin)
+		v1.GET("/github/callback", social.HandleGitHubCallback)
 
 	}
 

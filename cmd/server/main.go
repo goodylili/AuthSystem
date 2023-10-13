@@ -28,8 +28,8 @@ func Run() error {
 	userService := users.NewService(store)
 	httpHandler := handler.NewHandler(&userService)
 
-	// StartServer the HTTP server
-	if err := httpHandler.StartServer(); err != nil {
+	// Initialize the HTTP server
+	if err := httpHandler.Initialize(); err != nil {
 		log.Fatalf("Server error: %v\n", err)
 		return err
 	}
