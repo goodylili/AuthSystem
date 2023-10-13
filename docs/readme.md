@@ -6,51 +6,48 @@ environment.
 ## Table of Contents
 
 1. [Health Check (Alive)](#health-check-alive)
-2. [User Registration](#user-registration)
-3. [Authentication](#authentication)
-4. [API Endpoints Overview](#api-endpoints-overview)
-5. [Further Reading](#further-reading)
+2. [API Endpoints Overview](#api-endpoints-overview)
+3. [Further Reading](#further-reading)
 
 ---
 
-### <a name="health-check-alive"></a>**1. Health Check (Alive)**
+### <a name="health-check-ping"></a>**1. Health Check (Ping)**
 
-Once you have the server running, you can check its health using the following endpoint:
+Once you have the server running, you can check the health of the service by using the following endpoint:
 
 - **Endpoint**: `/alive`
 - **HTTP Method**: `GET`
-- **Description**: Checks if the server is alive and responding.
+- **Description**: Checks the health of the service.
 
 **Responses**:
 
-- `200 OK`: Server is alive.
+- `200 OK`: Service is healthy.
+- `500 Internal Server Error`: Service is down or facing issues.
 
 ---
 
-### <a name="user-registration"></a>**2. User Registration**
+### <a name="database-health-check"></a>**2. Database Health Check**
 
-Begin by creating a new user account:
+To ensure your database connectivity is intact:
 
-- **Endpoint**: `/api/v1/users/`
-- **HTTP Method**: `POST`
-- **Description**: Registers a new user with the provided details.
+- **Endpoint**: `/ready`
+- **HTTP Method**: `GET`
+- **Description**: Checks if the database is alive and responding.
 
-**Request Body**:
-
-```json
-{
-  "username": "string",
-  "email": "string",
-  "password": "string",
-  "is_active": boolean
-}
-```
+| Parameter | Type | Description | Required |
+|-----------|------|-------------|----------|
+| -         | -    | -           | -        |
 
 **Responses**:
 
-- `201 Created`: Successfully created a user.
-- `400 Bad Request`: Invalid input or malformed request.
-- `500 Internal Server Error`: Unexpected server error.
+- `200 OK`: Database is alive and responding.
+- `500 Internal Server Error`: Database connection issues or the service is down.
+
+---
+
+### <a name="api-endpoints-overview"></a>**3. API Endpoints Overview**
+
+For a deep dive into each category of endpoints, refer to the detailed documentation:
 
 ---
 
