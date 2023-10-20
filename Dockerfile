@@ -23,4 +23,4 @@ COPY --from=build /app/server .
 EXPOSE 8080
 
 # Run your Go application
-CMD ["./server"]%
+CMD ["./server"]
